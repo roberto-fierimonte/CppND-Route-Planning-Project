@@ -4,6 +4,7 @@
 #include <vector>
 #include <string>
 #include <io2d.h>
+#include <stdexcept>
 #include "route_model.h"
 #include "render.h"
 #include "route_planner.h"
@@ -51,16 +52,53 @@ int main(int argc, const char **argv)
         else
             osm_data = std::move(*data);
     }
-    
+    //Complete this TODO to satisfy Project Rubric Criterias of User Input
+  
     // TODO 1: Declare floats `start_x`, `start_y`, `end_x`, and `end_y` and get
     // user input for these values using std::cin. Pass the user input to the
     // RoutePlanner object below in place of 10, 10, 90, 90.
+  
+  	/*
+    Here I implemented some basic inout checks to make sure that the user inputs are only 
+    between 0 and 100, and that users can only input numerical values. I used this discussion
+    as a reference: https://stackoverflow.com/questions/27906154/converting-string-to-float-in-c
+    */
+    char* ending;
+    std::string cin_str;
+  	
+    std::cout << "Enter the x coordinate of the starting point: ";
+    std::cin >> cin_str;
+    float start_x = std::strtof(cin_str.c_str(), &ending);
+    if (*ending != 0 || start_x < 0.0f || start_x > 100.0f) {
+        throw std::invalid_argument( "Incorrect value. Please enter a number between 0 and 100.");
+    }
+  
+    std::cout << "Enter the y coordinate of the starting point: ";
+    std::cin >> cin_str;
+  	float start_y = std::strtof(cin_str.c_str(), &ending);
+    if (*ending != 0 || start_y < 0.0f || start_y > 100.0f) {
+        throw std::invalid_argument( "Incorrect value. Please enter a number between 0 and 100.");
+    }
+  
+    std::cout << "Enter the x coordinate of the end point: ";
+    std::cin >> cin_str;
+    float end_x = std::strtof(cin_str.c_str(), &ending);
+    if (*ending != 0 || end_x < 0.0f || end_x > 100.0f) {
+        throw std::invalid_argument( "Incorrect value. Please enter a number between 0 and 100.");
+    }
+  
+    std::cout << "Enter the y coordinate of the end point: ";
+    std::cin >> cin_str;
+    float end_y = std::strtof(cin_str.c_str(), &ending);
+    if (*ending != 0 || end_y < 0.0f || end_y > 100.0f) {
+        throw std::invalid_argument( "Incorrect value. Please enter a number between 0 and 100.");
+    }
 
     // Build Model.
     RouteModel model{osm_data};
 
     // Create RoutePlanner object and perform A* search.
-    RoutePlanner route_planner{model, 10, 10, 90, 90};
+    RoutePlanner route_planner{model, start_x, start_y, end_x, end_y};
     route_planner.AStarSearch();
 
     std::cout << "Distance: " << route_planner.GetDistance() << " meters. \n";
